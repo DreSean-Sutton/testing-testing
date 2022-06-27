@@ -2,17 +2,21 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-describe('first test block', () => {
-  it('multiplication', () => {
-    function multiply(param1: number, param2: number) {
-      return param1 * param2
-    }
-    expect(multiply(5, 5)).toEqual(25)
-    expect(multiply(0, 0)).toEqual(0)
+describe('multiplication test', () => {
+  const multiply = (param1: number, param2: number) => {
+    return param1 * param2
+  }
+  it('returns 25 if params are 5, 5', () => {
+    const result = multiply(5, 5)
+    expect(result).toEqual(25)
+  })
+  it('return 0 if params are 0, 0', () => {
+    const result = multiply(0, 0);
+    expect(result).toEqual(0)
   })
 })
 
-describe.only('centuryFromYear(year)', () => {
+describe('centuryFromYear(year)', () => {
   function centuryFromYear(year: number) {
     let century = year / 100
     if (year % 100 === 0) {
@@ -40,5 +44,31 @@ describe.only('centuryFromYear(year)', () => {
   it('returns 1 for 50', () => {
     const result = centuryFromYear(50)
     expect(result).toEqual(1)
+  })
+})
+
+describe.only('check if a squared number is between two other numbers', () => {
+  const checkGtOrLt = (param1: number, param2: number, param3: number) => {
+    if(Math.pow(param1, 2) > param2
+    && Math.pow(param1, 2) < param3) {
+      return true
+    }
+    return false
+  }
+  it('returns true for 5, 20, 30', () => {
+    const result = checkGtOrLt(5, 20, 30);
+    expect(result).toBeTruthy()
+  })
+  it('returns false for 5, 15, 30', () => {
+    const result = checkGtOrLt(5, 30, 40);
+    expect(result).toBeFalsy()
+  })
+  it('returns true for 10, 100, 150', () => {
+    const result = checkGtOrLt(10, 50, 150);
+    expect(result).toBeTruthy()
+  })
+  it('returns false for 10, 50, 65',  () => {
+    const result = checkGtOrLt(10, 50, 65);
+    expect(result).toBeFalsy()
   })
 })
