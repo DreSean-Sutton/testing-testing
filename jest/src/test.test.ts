@@ -47,7 +47,7 @@ describe('centuryFromYear(year)', () => {
   })
 })
 
-describe.only('check if a squared number is between two other numbers', () => {
+describe('check if a squared number is between two other numbers', () => {
   const checkGtOrLt = (param1: number, param2: number, param3: number) => {
     if(Math.pow(param1, 2) > param2
     && Math.pow(param1, 2) < param3) {
@@ -70,5 +70,17 @@ describe.only('check if a squared number is between two other numbers', () => {
   it('returns false for 10, 50, 65',  () => {
     const result = checkGtOrLt(10, 50, 65);
     expect(result).toBeFalsy()
+  })
+})
+
+describe.only('Testing a greeting function', () => {
+  const greeting = (name: string)=> `Hello ${name} uwu`
+  it('testing mockfn', () => {
+    const something = jest.fn(greeting);
+    const result = something('Dre');
+    expect(something).toBeCalled();
+    expect(something).toBeCalledWith('Dre');
+    expect(result).toBe('Hello Dre uwu')
+    console.log(something.mock.results);
   })
 })
