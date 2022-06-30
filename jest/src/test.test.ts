@@ -73,14 +73,42 @@ describe('check if a squared number is between two other numbers', () => {
   })
 })
 
-describe.only('Testing a greeting function', () => {
+describe('Testing a greeting function', () => {
   const greeting = (name: string)=> `Hello ${name} uwu`
-  it('testing mockfn', () => {
+  test('jest.fn', () => {
     const something = jest.fn(greeting);
     const result = something('Dre');
     expect(something).toBeCalled();
     expect(something).toBeCalledWith('Dre');
     expect(result).toBe('Hello Dre uwu')
-    console.log(something.mock.results);
+  })
+})
+
+describe.only('Testing a greeting class', () => {
+  class Person {
+    name: string
+    constructor(name: string) {
+      this.name = name
+    }
+    sayMyName() {
+      return `My name is ${this.name}`;
+    }
+    favoriteNum(num: number) {
+      return num;
+    }
+  }
+  test('favoriteNum', () => {
+    const Me = new Person('Dre');
+    const mockName = jest.fn(Me.favoriteNum);
+    const result = mockName(12);
+    expect(mockName).toBeCalled();
+    expect(mockName).toHaveBeenCalledTimes(1);
+    expect(mockName(15)).toBe(15);
+    expect(result).toBe(12);
+  })
+  test('sayMyName', () => {
+    const Me = new Person('Dre');
+    const result = Me.sayMyName();
+    expect(result).toBe('My name is Dre');
   })
 })
