@@ -84,7 +84,7 @@ describe('Testing a greeting function', () => {
   })
 })
 
-describe.only('Testing a greeting class', () => {
+describe('Testing a greeting class', () => {
   class Person {
     name: string
     constructor(name: string) {
@@ -110,5 +110,34 @@ describe.only('Testing a greeting class', () => {
     const Me = new Person('Dre');
     const result = Me.sayMyName();
     expect(result).toBe('My name is Dre');
+  })
+})
+
+describe.only('Testing Async mocking',  () => {
+  interface ResProps {
+    fighter: string,
+    fighterId: number,
+    rosterId: number,
+    orderByRosterId: boolean
+  }
+  it('returns inkling as fighter property', async () => {
+    const res = await fetch('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling', {
+      method: 'GET',
+      headers: {
+        accept: 'application/json'
+      }
+    });
+    const json: ResProps = await res.json();
+    expect(json.fighter).toBe('inkling');
+  })
+  test('if result has a rosterId property', async () => {
+    const res = await fetch('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling', {
+      method: 'GET',
+      headers: {
+        accept: 'application/json'
+      }
+    });
+    const result = await res.json();
+    expect(result.hasOwnProperty('rosterId')).toBeTruthy()
   })
 })
