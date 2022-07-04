@@ -1,7 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import axios from 'axios';
 import App from './App';
+import { mockComponent } from 'react-dom/test-utils';
+const axios = require('axios');
+jest.mock('axios');
 
 describe('multiplication test', () => {
   const multiply = (param1: number, param2: number) => {
@@ -114,7 +116,7 @@ describe('Testing a greeting class', () => {
   })
 })
 
-describe.only('Testing Async mocking',  () => {
+describe('Testing Async mocking',  () => {
   interface ResProps {
     data: {
       fighter: string,
@@ -130,5 +132,47 @@ describe.only('Testing Async mocking',  () => {
   test('if result has a rosterId property', async () => {
     const res: ResProps = await axios.get('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling')
     expect(res.data.hasOwnProperty('rosterId')).toBeTruthy()
+  })
+})
+
+describe.only('Testing api call mocking', () => {
+  const fetchData = async () => {
+    try {
+      return await axios.get('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling')
+    }
+    catch(e) {
+      return {};
+    }
+  }
+  describe('when API call is successful', () => {
+    interface ResProps {
+      fighter: string,
+      fighterId: number,
+      rosterId: number,
+      orderByRosterId: boolean
+      }
+    it('returns goku for the fighter property of the mock call', async () => {
+      const data: ResProps = {
+        fighter: 'goku',
+        fighterId: 1,
+        rosterId: 1,
+        orderByRosterId: false
+      }
+      axios.get.mockResolvedValueOnce(data)
+
+      const res = await fetchData();
+      expect(res).toBe(data);
+      expect(axios.get).toBeCalledTimes(1);
+    })
+  })
+
+  describe('when API call fails', () => {
+    it('returns an empty object', async () => {
+      const errorMessage = 'request rejected';
+      axios.get.mockRejectedValueOnce(new Error(errorMessage));
+      const res = await fetchData();
+      expect(res).toBe({});
+      expect(axios.get).toBeCalledTimes(1);
+    })
   })
 })
