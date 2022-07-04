@@ -171,7 +171,7 @@ describe.only('Testing api call mocking', () => {
       const errorMessage = 'request rejected';
       axios.get.mockRejectedValueOnce(new Error(errorMessage));
       const res = await fetchData();
-      expect(res).toBe({});
+      expect(res).toStrictEqual({});
       expect(axios.get).toBeCalledTimes(1);
     })
   })
