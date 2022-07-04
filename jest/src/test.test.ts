@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import axios from 'axios';
 import App from './App';
 
 describe('multiplication test', () => {
@@ -115,29 +116,19 @@ describe('Testing a greeting class', () => {
 
 describe.only('Testing Async mocking',  () => {
   interface ResProps {
-    fighter: string,
-    fighterId: number,
-    rosterId: number,
-    orderByRosterId: boolean
+    data: {
+      fighter: string,
+      fighterId: number,
+      rosterId: number,
+      orderByRosterId: boolean
+    }
   }
   it('returns inkling as fighter property', async () => {
-    const res = await fetch('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling', {
-      method: 'GET',
-      headers: {
-        accept: 'application/json'
-      }
-    });
-    const json: ResProps = await res.json();
-    expect(json.fighter).toBe('inkling');
+    const res: ResProps = await axios.get('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling')
+    expect(res.data.fighter).toBe('inkling');
   })
   test('if result has a rosterId property', async () => {
-    const res = await fetch('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling', {
-      method: 'GET',
-      headers: {
-        accept: 'application/json'
-      }
-    });
-    const result = await res.json();
-    expect(result.hasOwnProperty('rosterId')).toBeTruthy()
+    const res: ResProps = await axios.get('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling')
+    expect(res.data.hasOwnProperty('rosterId')).toBeTruthy()
   })
 })
