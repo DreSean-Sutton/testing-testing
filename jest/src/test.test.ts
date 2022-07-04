@@ -118,24 +118,34 @@ describe('Testing a greeting class', () => {
 
 describe('Testing Async mocking',  () => {
   interface ResProps {
-    data: {
-      fighter: string,
-      fighterId: number,
-      rosterId: number,
-      orderByRosterId: boolean
-    }
+    fighter: string,
+    fighterId: number,
+    rosterId: number,
+    orderByRosterId: boolean
   }
   it('returns inkling as fighter property', async () => {
-    const res: ResProps = await axios.get('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling')
-    expect(res.data.fighter).toBe('inkling');
+    const res = await fetch('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling', {
+      method: 'GET',
+      headers: {
+        accepts: 'application/json'
+      }
+    })
+    const json: ResProps = await res.json()
+    expect(json.fighter).toBe('inkling');
   })
   test('if result has a rosterId property', async () => {
-    const res: ResProps = await axios.get('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling')
-    expect(res.data.hasOwnProperty('rosterId')).toBeTruthy()
+    const res = await fetch('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling', {
+      method: 'GET',
+      headers: {
+        accepts: 'application/json'
+      }
+    })
+    const json: ResProps = await res.json()
+    expect(json.hasOwnProperty('rosterId')).toBeTruthy()
   })
 })
 
-describe.only('Testing api call mocking', () => {
+describe('Testing api call mocking', () => {
   const fetchData = async () => {
     try {
       return await axios.get('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling')
