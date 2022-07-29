@@ -2,6 +2,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 import { mockComponent } from 'react-dom/test-utils';
+import { rest } from 'msw'
+import { setupServer } from 'msw/node'
 const axios = require('axios');
 jest.mock('axios');
 
@@ -184,5 +186,24 @@ describe('Testing api call mocking', () => {
       expect(res).toStrictEqual({});
       expect(axios.get).toBeCalledTimes(1);
     })
+  })
+})
+
+// Works if I'm not jest mocking axios
+describe.skip('Testing API calling with msw', () => {
+  const server = setupServer(
+    rest.get('/api', (req, res, ctx) => {
+      return res(ctx.json('Testing, testing, 1, 2 , 3.'));
+    }),
+  )
+  beforeAll(() => server.listen())
+
+  afterEach(() => server.resetHandlers())
+
+  afterAll(() => server.close())
+
+  it('Gets receives the correct response', async () => {
+    const response = await axios.get('/api');
+    expect(response.data).toBeTruthy()
   })
 })
