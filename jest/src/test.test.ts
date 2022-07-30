@@ -3,11 +3,12 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 import { mockComponent } from 'react-dom/test-utils';
 import { rest } from 'msw'
-import { setupServer } from 'msw/node'
-const axios = require('axios');
-jest.mock('axios');
+import { setupServer } from 'msw/node';
+import nock from 'nock';
+import axios from 'axios';
+// jest.mock('axios');
 
-describe('multiplication test', () => {
+describe.skip('multiplication test', () => {
   const multiply = (param1: number, param2: number) => {
     return param1 * param2
   }
@@ -21,7 +22,7 @@ describe('multiplication test', () => {
   })
 })
 
-describe('centuryFromYear(year)', () => {
+describe.skip('centuryFromYear(year)', () => {
   function centuryFromYear(year: number) {
     let century = year / 100
     if (year % 100 === 0) {
@@ -52,7 +53,7 @@ describe('centuryFromYear(year)', () => {
   })
 })
 
-describe('check if a squared number is between two other numbers', () => {
+describe.skip('check if a squared number is between two other numbers', () => {
   const checkGtOrLt = (param1: number, param2: number, param3: number) => {
     if(Math.pow(param1, 2) > param2
     && Math.pow(param1, 2) < param3) {
@@ -78,7 +79,7 @@ describe('check if a squared number is between two other numbers', () => {
   })
 })
 
-describe('Testing a greeting function', () => {
+describe.skip('Testing a greeting function', () => {
   const greeting = (name: string)=> `Hello ${name} uwu`
   test('jest.fn', () => {
     const something = jest.fn(greeting);
@@ -89,7 +90,7 @@ describe('Testing a greeting function', () => {
   })
 })
 
-describe('Testing a greeting class', () => {
+describe.skip('Testing a greeting class', () => {
   class Person {
     name: string
     constructor(name: string) {
@@ -118,7 +119,7 @@ describe('Testing a greeting class', () => {
   })
 })
 
-describe('Testing Async mocking',  () => {
+describe.skip('Testing Async mocking',  () => {
   interface ResProps {
     fighter: string,
     fighterId: number,
@@ -147,7 +148,7 @@ describe('Testing Async mocking',  () => {
   })
 })
 
-describe('Testing api call mocking', () => {
+describe.skip('Testing api call mocking', () => {
   const fetchData = async () => {
     try {
       return await axios.get('https://the-ultimate-api.herokuapp.com/api/fighters?fighter=inkling')
@@ -156,7 +157,7 @@ describe('Testing api call mocking', () => {
       return {};
     }
   }
-  describe('when API call is successful', () => {
+  describe.skip('when API call is successful', () => {
     interface ResProps {
       fighter: string,
       fighterId: number,
@@ -178,7 +179,7 @@ describe('Testing api call mocking', () => {
     })
   })
 
-  describe('when API call fails', () => {
+  describe.skip('when API call fails', () => {
     it('returns an empty object', async () => {
       const errorMessage = 'request rejected';
       axios.get.mockRejectedValueOnce(new Error(errorMessage));
@@ -207,3 +208,28 @@ describe.skip('Testing API calling with msw', () => {
     expect(response.data).toBeTruthy()
   })
 })
+
+describe('expectedData', () => {
+
+  const getData = async () => {
+    const res = await axios.get('https://api.example.com');
+
+    const data = res.data;
+    return data;
+  }
+  it("checks if API returns expected data", async () => {
+    nock('https://api.example.com')
+      .get('/')
+      .reply(200, {
+        data: {
+          id: 1,
+          title: "The weather is nice",
+          completed: true
+        }
+
+      },
+        { 'Access-Control-Allow-Origin': '*' });
+    const results = await getData();
+    expect(results.data.title).toEqual("The weather is nice");
+  });
+});
